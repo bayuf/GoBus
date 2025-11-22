@@ -10,11 +10,11 @@ import (
 
 func main() {
 	// Init
-	ticketService := services.NewTicketService()
-	handler := handler.NewHandler(ticketService)
+	ticketService := *services.NewTicketService()
+	handler := handler.NewHandler(&ticketService)
 
 	// mengirim request ke dto
-	request := dto.NewRequest("Bayu Firmansyah", "Surabaya")
+	request := dto.NewRequest("Bayu Firmansyah", "Jakarta")
 
 	response, err := handler.Process(request)
 	if err != nil {

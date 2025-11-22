@@ -4,43 +4,29 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
-	"strings"
 
 	"github.com/bayuf/GoBus/dto"
 	"github.com/bayuf/GoBus/model"
 )
 
-type TicketService struct{}
+type TicketService struct {
+	Price map[string]float64
+}
 
-func NewTicketService() TicketService {
-	return TicketService{}
+func NewTicketService() *TicketService {
+	// Baca File Json
+	dataBytes, _ := os.ReadFile("data/destination.json")
+
+	price := make(map[string]float64)
+	json.Unmarshal(dataBytes, &price)
+	return &TicketService{Price: price}
 }
 
 // mendapatkan informasi tiket
 func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 
-	// jika nama kosong
-	if strings.TrimSpace(req.Name) == "" {
-		return model.Ticket{}, errors.New("name is empty")
-	}
-	// jika destinasi kosong
-	if strings.TrimSpace(req.Destination) == "" {
-		return model.Ticket{}, errors.New("destination is empty")
-	}
-	// Baca File Json
-	dataBytes, err := os.ReadFile("data/destination.json")
-	if err != nil {
-		return model.Ticket{}, err
-	}
-
-	// decode json => Map
-	prices := make(map[string]float64) //membuat map dengan key string dan value float64
-	if err := json.Unmarshal(dataBytes, &prices); err != nil {
-		return model.Ticket{}, err
-	}
-
 	// mencari harga berdasarkan tujuan di dalam map
-	price, ok := prices[req.Destination]
+	price, ok := tikcet.Price[req.Destination]
 	if !ok {
 		return model.Ticket{}, errors.New("destination not found")
 	}
