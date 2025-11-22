@@ -4,6 +4,7 @@ package dto
 type Request struct {
 	Name        string
 	Destination string
+	Price       float64
 }
 
 func NewRequest(name, destination string) Request {

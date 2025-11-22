@@ -13,9 +13,9 @@ func NewHandler(ts services.TicketService) Handler {
 	return Handler{TicketService: ts}
 }
 
-func (handler Handler) Process(req dto.Request) (dto.Response, error) {
+func (handler *Handler) Process(req dto.Request) (dto.Response, error) {
 	// Request dikirim ke services untuk mendapatkan informasi tiket
-	ticket, err := handler.TicketService.GetTicket(req.Name, req.Destination)
+	ticket, err := handler.TicketService.GetTicket(req)
 	if err != nil {
 		return dto.Response{}, err
 	}

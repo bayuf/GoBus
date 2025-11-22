@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// Init
-	ticketService := services.NewTicketServices()
+	ticketService := services.NewTicketService()
 	handler := handler.NewHandler(ticketService)
 
 	// mengirim request ke dto
