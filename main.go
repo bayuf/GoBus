@@ -5,9 +5,14 @@ import (
 
 	"github.com/bayuf/GoBus/dto"
 	"github.com/bayuf/GoBus/handler"
+	"github.com/bayuf/GoBus/services"
 )
 
 func main() {
+	// Init
+	ticketService := services.NewTicketServices()
+	handler := handler.NewHandler(ticketService)
+
 	// mengirim request ke dto
 	request := dto.NewRequest("Bayu Firmansyah", "Jakarta")
 

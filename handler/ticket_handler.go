@@ -5,8 +5,17 @@ import (
 	"github.com/bayuf/GoBus/services"
 )
 
-func Process(req dto.Request) (dto.Response, error) {
-	ticket, err := services.GetTicket(req.Name, req.Destination)
+type Handler struct {
+	TicketService services.TicketService
+}
+
+func NewHandler(ts services.TicketService) Handler {
+	return Handler{TicketService: ts}
+}
+
+func (handler Handler) Process(req dto.Request) (dto.Response, error) {
+	// Request dikirim ke services untuk mendapatkan informasi tiket
+	ticket, err := handler.TicketService.GetTicket(req.Name, req.Destination)
 	if err != nil {
 		return dto.Response{}, err
 	}

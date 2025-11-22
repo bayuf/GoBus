@@ -1,6 +1,6 @@
 package model
 
-type Ticket struct {
+type Tikcet struct {
 	Name        string
 	Destination string
 	Price       float64
