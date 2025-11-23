@@ -14,7 +14,7 @@ func main() {
 	handler := handler.NewHandler(&ticketService)
 
 	// Menambah destinasi baru
-	addDest := dto.NewDest("Bandung", 350000)
+	addDest := dto.NewDest("Mojokerto", 10000)
 
 	if err := handler.AddDest(addDest); err != nil {
 		fmt.Println(err)
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	// mengirim request ke dto
-	request := dto.NewRequest("Bayu Firmansyah", "Bandung")
+	request := dto.NewRequest("Bayu Firmansyah", "Jakarta")
 
 	response, err := handler.Process(request)
 	if err != nil {
