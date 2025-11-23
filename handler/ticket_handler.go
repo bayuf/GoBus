@@ -39,3 +39,20 @@ func (handler *Handler) Process(req dto.Request) (dto.Response, error) {
 		Price:       ticket.Price,
 	}, nil
 }
+
+func (handler *Handler) AddDest(req dto.Request) error {
+	// jika destinasi kosong
+	if strings.TrimSpace(req.Destination) == "" {
+		return errors.New("destination is empty")
+	}
+
+	if req.Price <= 0 {
+		return errors.New("invalid price input")
+	}
+
+	if err := handler.TicketService.AddDestination(req); err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -10,23 +10,23 @@ import (
 )
 
 type TicketService struct {
-	Price map[string]float64
+	Destinations map[string]float64
 }
 
 func NewTicketService() *TicketService {
 	// Baca File Json
 	dataBytes, _ := os.ReadFile("data/destination.json")
 
-	price := make(map[string]float64)
-	json.Unmarshal(dataBytes, &price)
-	return &TicketService{Price: price}
+	destination := make(map[string]float64)
+	json.Unmarshal(dataBytes, &destination)
+	return &TicketService{Destinations: destination}
 }
 
 // mendapatkan informasi tiket
 func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 
 	// mencari harga berdasarkan tujuan di dalam map
-	price, ok := tikcet.Price[req.Destination]
+	price, ok := tikcet.Destinations[req.Destination]
 	if !ok {
 		return model.Ticket{}, errors.New("destination not found")
 	}
@@ -39,15 +39,16 @@ func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 
 }
 
-// func (tikcet *TicketService) AddDestination(req dto.Request) error {
-// 	// jika nama kosong
-// 	if strings.TrimSpace(req.Destination) == "" {
-// 		return errors.New("destinasi tidak boleh kosong")
-// 	}
-// 	// jika destinasi kosong
-// 	if req.Price <= 0 {
-// 		return errors.New("harga tidak valid")
-// 	}
+func (tikcet *TicketService) AddDestination(req dto.Request) error {
 
-// 	return nil
-// }
+	// jika data di map ada maka error
+	if _, exist := tikcet.Destinations[req.Destination]; exist {
+		return errors.New("failed : data already exist")
+	}
+
+	tikcet.Destinations[req.Destination] = req.Price
+	updated, _ := json.MarshalIndent(tikcet.Destinations, "", " ")
+	os.WriteFile("data/destination.json", updated, 0644)
+
+	return nil
+}

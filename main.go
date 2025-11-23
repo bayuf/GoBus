@@ -13,12 +13,21 @@ func main() {
 	ticketService := *services.NewTicketService()
 	handler := handler.NewHandler(&ticketService)
 
+	// Menambah destinasi baru
+	addDest := dto.NewDest("Bandung", 350000)
+
+	if err := handler.AddDest(addDest); err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("succes")
+	}
+
 	// mengirim request ke dto
-	request := dto.NewRequest("Bayu Firmansyah", "Jakarta")
+	request := dto.NewRequest("Bayu Firmansyah", "Bandung")
 
 	response, err := handler.Process(request)
 	if err != nil {
-		fmt.Println("Data Error :", err.Error())
+		fmt.Println("Data Error :", err)
 	} else {
 		fmt.Println("======= Harga Tiket =======")
 		fmt.Println("Penumpang :", response.Name)
