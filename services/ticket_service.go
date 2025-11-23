@@ -39,17 +39,17 @@ func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 
 	// jika nama kosong
 	if strings.TrimSpace(req.Name) == "" {
-		return model.Ticket{}, errors.New("name is empty")
+		return model.Ticket{}, errors.New("error: name is empty")
 	}
 	// jika destinasi kosong
 	if strings.TrimSpace(req.Destination) == "" {
-		return model.Ticket{}, errors.New("destination is empty")
+		return model.Ticket{}, errors.New("error: destination is empty")
 	}
 
 	// mencari harga berdasarkan tujuan di dalam map
 	price, ok := tikcet.Destinations[req.Destination]
 	if !ok {
-		return model.Ticket{}, errors.New("destination not found")
+		return model.Ticket{}, errors.New("error: destination not found")
 	}
 
 	return model.Ticket{
@@ -63,16 +63,17 @@ func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 func (tikcet *TicketService) AddDestination(req dto.Request) error {
 	// jika destinasi kosong
 	if strings.TrimSpace(req.Destination) == "" {
-		return errors.New("destination is empty")
+		return errors.New("error: destination is empty")
 	}
 
+	// jika biaya 0 atau kurang
 	if req.Price <= 0 {
-		return errors.New("invalid price input")
+		return errors.New("error: invalid price input")
 	}
 
 	// validasi jika destinasi sudah ada
 	if _, exist := tikcet.Destinations[req.Destination]; exist {
-		return errors.New("failed: data already exist")
+		return errors.New("error: data already exist")
 	}
 
 	tikcet.Destinations[req.Destination] = req.Price
