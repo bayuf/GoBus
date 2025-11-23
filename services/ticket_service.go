@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"strings"
 
 	"github.com/bayuf/GoBus/dto"
 	"github.com/bayuf/GoBus/model"
@@ -31,17 +32,19 @@ func NewTicketService() *TicketService {
 	file.Close()
 
 	return &TicketService{Destinations: destinations}
-
-	// Baca File Json
-	// dataBytes, _ := os.ReadFile("data/destination.json")
-
-	// destination := make(map[string]float64)
-	// json.Unmarshal(dataBytes, &destination)
-	// return &TicketService{Destinations: destination}
 }
 
 // mendapatkan informasi tiket
 func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
+
+	// jika nama kosong
+	if strings.TrimSpace(req.Name) == "" {
+		return model.Ticket{}, errors.New("name is empty")
+	}
+	// jika destinasi kosong
+	if strings.TrimSpace(req.Destination) == "" {
+		return model.Ticket{}, errors.New("destination is empty")
+	}
 
 	// mencari harga berdasarkan tujuan di dalam map
 	price, ok := tikcet.Destinations[req.Destination]
@@ -58,6 +61,14 @@ func (tikcet *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 }
 
 func (tikcet *TicketService) AddDestination(req dto.Request) error {
+	// jika destinasi kosong
+	if strings.TrimSpace(req.Destination) == "" {
+		return errors.New("destination is empty")
+	}
+
+	if req.Price <= 0 {
+		return errors.New("invalid price input")
+	}
 
 	// validasi jika destinasi sudah ada
 	if _, exist := tikcet.Destinations[req.Destination]; exist {
@@ -86,15 +97,5 @@ func (tikcet *TicketService) AddDestination(req dto.Request) error {
 	if err := os.Rename(tempFile, "data/destination.json"); err != nil {
 		return err
 	}
-
-	// jika data di map ada maka error
-	// if _, exist := tikcet.Destinations[req.Destination]; exist {
-	// 	return errors.New("failed : data already exist")
-	// }
-
-	// tikcet.Destinations[req.Destination] = req.Price
-	// updated, _ := json.MarshalIndent(tikcet.Destinations, "", "  ")
-	// os.WriteFile("data/destination.json", updated, 0644)
-
 	return nil
 }
