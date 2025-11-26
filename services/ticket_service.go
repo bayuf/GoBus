@@ -11,7 +11,7 @@ import (
 )
 
 type TicketService struct {
-	TicketDatas map[string]float64
+	Destinations map[string]float64
 }
 
 func NewTicketService() *TicketService {
@@ -19,7 +19,7 @@ func NewTicketService() *TicketService {
 	file, err := os.Open("data/destination.json")
 	if err != nil {
 		// kembali map kosong jika file tidak ada
-		return &TicketService{TicketDatas: make(map[string]float64)}
+		return &TicketService{Destinations: make(map[string]float64)}
 	}
 
 	// baca dengan streaming
@@ -31,7 +31,7 @@ func NewTicketService() *TicketService {
 	// file ditutup setelah semua proses di func ini selesai dijalankan
 	defer file.Close()
 
-	return &TicketService{TicketDatas: destinations}
+	return &TicketService{Destinations: destinations}
 }
 
 // mendapatkan informasi tiket
@@ -47,7 +47,7 @@ func (ticket *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 	}
 
 	// mencari harga berdasarkan tujuan di dalam map
-	price, ok := ticket.TicketDatas[req.Destination]
+	price, ok := ticket.Destinations[req.Destination]
 	if !ok {
 		return model.Ticket{}, errors.New("error: destination not found")
 	}
@@ -72,11 +72,11 @@ func (tikcet *TicketService) AddDestination(req dto.Request) error {
 	}
 
 	// validasi jika destinasi sudah ada
-	if _, exist := tikcet.TicketDatas[req.Destination]; exist {
+	if _, exist := tikcet.Destinations[req.Destination]; exist {
 		return errors.New("error: data already exist")
 	}
 
-	tikcet.TicketDatas[req.Destination] = req.Price
+	tikcet.Destinations[req.Destination] = req.Price
 
 	// membuat file baru untuk menampung data sementara
 	tempFile := "data/destination_temp.json"
@@ -90,7 +90,7 @@ func (tikcet *TicketService) AddDestination(req dto.Request) error {
 	encoder := json.NewEncoder(file)
 	encoder.SetIndent("", "  ")
 
-	if err := encoder.Encode(tikcet.TicketDatas); err != nil {
+	if err := encoder.Encode(tikcet.Destinations); err != nil {
 		return err
 	}
 
