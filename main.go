@@ -10,8 +10,8 @@ import (
 
 func main() {
 	// Init
-	ticketService := *services.NewTicketService()
-	handler := handler.NewHandler(&ticketService)
+	ticketService := services.NewTicketService()
+	handler := handler.NewHandler(ticketService)
 
 	// Menambah destinasi baru
 	// addDestReq := dto.NewDest("Mojokerto", 10000)
