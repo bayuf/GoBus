@@ -23,7 +23,7 @@ func main() {
 	// }
 
 	// mengirim request ke dto
-	request := dto.NewRequest("Bayu Firmansyah", "Jakarta")
+	request := dto.NewRequest("Bayu Firmansyah", "Surabaya")
 
 	response, err := handler.Process(request)
 	if err != nil {

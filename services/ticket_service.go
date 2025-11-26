@@ -10,32 +10,28 @@ import (
 	"github.com/bayuf/GoBus/model"
 )
 
-type TicketService struct {
-	Destinations map[string]float64
-}
+type TicketService struct{}
 
 func NewTicketService() *TicketService {
+	return &TicketService{}
+}
+
+// mendapatkan informasi tiket
+func (ticket *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 	// buka file json
 	file, err := os.Open("data/destination.json")
 	if err != nil {
-		// kembali map kosong jika file tidak ada
-		return &TicketService{Destinations: make(map[string]float64)}
+		return model.Ticket{}, err
 	}
+
+	// file ditutup setelah semua proses di func ini selesai dijalankan
+	defer file.Close()
 
 	// baca dengan streaming
 	decoder := json.NewDecoder(file)
 
 	destinations := make(map[string]float64) //map kosong
 	decoder.Decode(&destinations)            // decode json menjadi map
-
-	// file ditutup setelah semua proses di func ini selesai dijalankan
-	defer file.Close()
-
-	return &TicketService{Destinations: destinations}
-}
-
-// mendapatkan informasi tiket
-func (ticket *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 
 	// jika nama kosong
 	if strings.TrimSpace(req.Name) == "" {
@@ -47,7 +43,7 @@ func (ticket *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 	}
 
 	// mencari harga berdasarkan tujuan di dalam map
-	price, ok := ticket.Destinations[req.Destination]
+	price, ok := destinations[req.Destination]
 	if !ok {
 		return model.Ticket{}, errors.New("error: destination not found")
 	}
@@ -60,43 +56,43 @@ func (ticket *TicketService) GetTicket(req dto.Request) (model.Ticket, error) {
 
 }
 
-func (tikcet *TicketService) AddDestination(req dto.Request) error {
-	// jika destinasi kosong
-	if strings.TrimSpace(req.Destination) == "" {
-		return errors.New("error: destination is empty")
-	}
+// func (tikcet *TicketService) AddDestination(req dto.Request) error {
+// 	// jika destinasi kosong
+// 	if strings.TrimSpace(req.Destination) == "" {
+// 		return errors.New("error: destination is empty")
+// 	}
 
-	// jika biaya 0 atau kurang
-	if req.Price <= 0 {
-		return errors.New("error: invalid price input")
-	}
+// 	// jika biaya 0 atau kurang
+// 	if req.Price <= 0 {
+// 		return errors.New("error: invalid price input")
+// 	}
 
-	// validasi jika destinasi sudah ada
-	if _, exist := tikcet.Destinations[req.Destination]; exist {
-		return errors.New("error: data already exist")
-	}
+// 	// validasi jika destinasi sudah ada
+// 	if _, exist := tikcet.Destinations[req.Destination]; exist {
+// 		return errors.New("error: data already exist")
+// 	}
 
-	tikcet.Destinations[req.Destination] = req.Price
+// 	tikcet.Destinations[req.Destination] = req.Price
 
-	// membuat file baru untuk menampung data sementara
-	tempFile := "data/destination_temp.json"
+// 	// membuat file baru untuk menampung data sementara
+// 	tempFile := "data/destination_temp.json"
 
-	file, err := os.Create(tempFile)
-	if err != nil {
-		return err
-	}
+// 	file, err := os.Create(tempFile)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	// encode json ke temp file
-	encoder := json.NewEncoder(file)
-	encoder.SetIndent("", "  ")
+// 	// encode json ke temp file
+// 	encoder := json.NewEncoder(file)
+// 	encoder.SetIndent("", "  ")
 
-	if err := encoder.Encode(tikcet.Destinations); err != nil {
-		return err
-	}
+// 	if err := encoder.Encode(tikcet.Destinations); err != nil {
+// 		return err
+// 	}
 
-	defer file.Close() // tutup file sebelum replace
-	if err := os.Rename(tempFile, "data/destination.json"); err != nil {
-		return err
-	}
-	return nil
-}
+// 	defer file.Close() // tutup file sebelum replace
+// 	if err := os.Rename(tempFile, "data/destination.json"); err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
