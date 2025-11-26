@@ -14,13 +14,13 @@ func main() {
 	handler := handler.NewHandler(&ticketService)
 
 	// Menambah destinasi baru
-	addDest := dto.NewDest("Mojokerto", 10000)
+	// addDestReq := dto.NewDest("Mojokerto", 10000)
 
-	if err := handler.AddDest(addDest); err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("succes")
-	}
+	// if err := handler.AddDest(addDestReq); err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Println("succes")
+	// }
 
 	// mengirim request ke dto
 	request := dto.NewRequest("Bayu Firmansyah", "Jakarta")

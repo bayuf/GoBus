@@ -6,11 +6,11 @@ import (
 )
 
 type Handler struct {
-	TicketService services.TicketService
+	TicketService *services.TicketService
 }
 
-func NewHandler(ts *services.TicketService) Handler {
-	return Handler{TicketService: *ts}
+func NewHandler(ts *services.TicketService) *Handler {
+	return &Handler{TicketService: ts}
 }
 
 func (handler *Handler) Process(req dto.Request) (dto.Response, error) {
