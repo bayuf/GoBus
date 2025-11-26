@@ -29,7 +29,7 @@ func NewTicketService() *TicketService {
 	decoder.Decode(&destinations)            // decode json menjadi map
 
 	// file ditutup setelah semua proses di func ini selesai dijalankan
-	file.Close()
+	defer file.Close()
 
 	return &TicketService{TicketDatas: destinations}
 }
@@ -94,7 +94,7 @@ func (tikcet *TicketService) AddDestination(req dto.Request) error {
 		return err
 	}
 
-	file.Close() // tutup file sebelum replace
+	defer file.Close() // tutup file sebelum replace
 	if err := os.Rename(tempFile, "data/destination.json"); err != nil {
 		return err
 	}

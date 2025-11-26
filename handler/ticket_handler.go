@@ -28,10 +28,10 @@ func (handler *Handler) Process(req dto.Request) (dto.Response, error) {
 	}, nil
 }
 
-func (handler *Handler) AddDest(req dto.Request) error {
-	// mengirim request ke service untuk menambah destinasi
-	if err := handler.TicketService.AddDestination(req); err != nil {
-		return err
-	}
-	return nil
-}
+// func (handler *Handler) AddDest(req dto.Request) error {
+// 	// mengirim request ke service untuk menambah destinasi
+// 	if err := handler.TicketService.AddDestination(req); err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }

@@ -11,6 +11,6 @@ func NewRequest(name, destination string) Request {
 	return Request{Name: name, Destination: destination}
 }
 
-func NewDest(destination string, price float64) Request {
-	return Request{Destination: destination, Price: price}
-}
+// func NewDest(destination string, price float64) Request {
+// 	return Request{Destination: destination, Price: price}
+// }
